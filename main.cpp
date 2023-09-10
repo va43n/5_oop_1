@@ -88,7 +88,8 @@ int main() {
 			}
 		}
 		else {
-			
+			std::cout << "New";
+			return 0;
 		}
 		k = get_k(n);
 		std::cout << "k = " << k << std::endl;
