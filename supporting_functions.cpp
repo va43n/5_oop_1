@@ -1,6 +1,6 @@
 #include "Header.h"
 
-double test(int mode) {
+double check_variables(int mode) {
 	std::string temp;
 	double result;
 
@@ -14,14 +14,14 @@ double test(int mode) {
 			continue;
 		}
 		if (mode == 0) {
-			if (result < 0 || result > 10000) {
+			if (result < -10000 || result > 10000) {
 				std::cout << "Mu should be more or equal to " << -10000 << " and less or equal to " << 10000 << ". Try again: ";
 				continue;
 			}
 		}
 		else if (mode == 1) {
-			if (result < -10000 || result > 10000 || result == 0) {
-				std::cout << "Lambda should be more or equal to " << -10000 << ", less or equal to " << 10000 << " and not equal to " << 0 << ". Try again: ";
+			if (result > 10000 || result < 0) {
+				std::cout << "Lambda should be more or equal to " << 0 << " and less or equal to " << 10000 << ". Try again: ";
 				continue;
 			}
 		}
@@ -58,6 +58,6 @@ double test(int mode) {
 void enter(double* args, int size) {
 	for (int i = 0; i < size; i++) {
 		std::cout << "Enter " << i + 1 << " argument: ";
-		args[i] = test(i % 3);
+		args[i] = check_variables(i % 3);
 	}
 }

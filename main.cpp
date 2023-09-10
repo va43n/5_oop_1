@@ -11,8 +11,8 @@ int main() {
 
 	srand(time(NULL));
 
-	while (mode != 'd' && mode != 'm' && mode != 'e') {
-		std::cout << "Enter one of the available modes (d - default, m - mix, e - emperical): ";
+	while (mode != 'd' && mode != 'm' && mode != 'e' && mode != 't') {
+		std::cout << "Enter one of the available modes (d - default, m - mix, e - emperical, t - test): ";
 		std::cin >> mode;
 	}
 
@@ -21,7 +21,7 @@ int main() {
 		enter(args, 3);
 
 		std::cout << "Enter x: ";
-		x = test(3);
+		x = check_variables(3);
 
 		//__________________________f(x)_______________________________
 		std::cout << "f(" << x << ") = " << get_f(x, args[0], args[1], args[2]) << std::endl;
@@ -46,10 +46,10 @@ int main() {
 		enter(args, 6);
 
 		std::cout << "Enter p: ";
-		param = test(4);
+		param = check_variables(4);
 
 		std::cout << "Enter x: ";
-		x = test(3);
+		x = check_variables(3);
 
 		//________________________mix f(x)_____________________________
 		std::cout << "(p = " << param <<") mix_f(" << x << ") = " << get_mix_f(x, args, param) << std::endl;
@@ -69,10 +69,10 @@ int main() {
 	}
 	else if (mode == 'e') {
 		int* counter, k;
-		double delta, * frequency, * density, min, max;
+		double delta, * frequency, * density, min, max, mu, la, nu;
 
 		std::cout << "Enter n: ";
-		n = test(5);
+		n = check_variables(5);
 
 		while (mode != 'r' && mode != 'd') {
 			std::cout << "Enter one of the available modes (r - random, d - default): ";
@@ -88,24 +88,18 @@ int main() {
 			}
 		}
 		else {
-			std::cout << "New";
-			return 0;
+			std::cout << "Enter mu, lambda, nu: ";
+			std::cin >> mu >> la >> nu;
+			for (int i = 0; i < n; i++) {
+				args[i] = get_model(mu, la, nu);
+			}
 		}
 		k = get_k(n);
 		std::cout << "k = " << k << std::endl;
 
-		min = args[0];
-		max = args[0];
-		for (int i = 0; i < n; i++) {
-			if (args[i] > max) {
-				max = args[i];
-			}
-			if (args[i] < min) {
-				min = args[i];
-			}
-		}
+		min = get_min(args, n);
 
-		delta = (max - min) / k;
+		delta = get_delta(args, n, k);
 
 		counter = get_empirical_counter(args, delta, n, k, min);
 		frequency = get_empirical_frequency(counter, n, k);
@@ -116,7 +110,7 @@ int main() {
 		}
 
 		std::cout << "Enter x: ";
-		x = test(3);
+		x = check_variables(3);
 
 		//_____________________empirical f(x)__________________________
 		std::cout << "empirical_f(" << x << ") = " << get_empirical_f(x, density, k, delta, min) << std::endl;
@@ -133,6 +127,9 @@ int main() {
 		//______________________empirical model________________________
 		std::cout << "(delta = " << delta << ", k = " << k <<", min = " << min << ") empirical x = " << get_empirical_model(frequency, delta, k, min) << std::endl;
 		//______________________empirical model________________________
+	}
+	else if (mode == 't') {
+		test();
 	}
 
 	return 0;

@@ -13,6 +13,26 @@ int get_k(int n) {
 	return (int) (log(n) / log(2)) + 1;
 }
 
+double get_min(double* X, int n) {
+	double min = X[0];
+	for (int i = 0; i < n; i++) {
+		if (X[i] < min) {
+			min = X[i];
+		}
+	}
+	return min;
+}
+
+double get_delta(double* X, int n, int k) {
+	double max = X[0];
+	for (int i = 0; i < n; i++) {
+		if (X[i] > max) {
+			max = X[i];
+		}
+	}
+	return (max - get_min(X, n)) / k;
+}
+
 int* get_empirical_counter(double* X, double delta, int n, int k, double min) {
 	int* counter;
 	bool flag;

@@ -18,9 +18,10 @@
 
 
 const double PI = acos(-1);
+const double EPS = pow(10, -2);
 
 
-double test(int mode);
+double check_variables(int mode);
 void enter(double* args, int size);
 
 double get_f(double x, double mu, double la, double nu);
@@ -33,9 +34,13 @@ double get_mix_model(double* args, double mix_param);
 
 double randomize_X();
 int get_k(int n);
+double get_min(double* X, int n);
+double get_delta(double* X, int n, int k);
 int* get_empirical_counter(double* X, double delta, int n, int k, double min);
 double* get_empirical_frequency(int* counter, int n, int k);
 double* get_empirical_density(int* counter, int n, int k, double delta);
 double get_empirical_f(double x, double* density, int k, double delta, double min);
 double* get_empirical_moments(double* X, int n);
 double get_empirical_model(double* frequency, double delta, int k, double min);
+
+void test();
