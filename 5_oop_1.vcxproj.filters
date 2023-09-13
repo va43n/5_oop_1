@@ -39,4 +39,9 @@
       <Filter>Файлы ресурсов</Filter>
     </ClInclude>
   </ItemGroup>
+  <ItemGroup>
+    <Text Include="data.txt">
+      <Filter>Файлы ресурсов</Filter>
+    </Text>
+  </ItemGroup>
 </Project>

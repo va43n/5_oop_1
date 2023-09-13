@@ -173,7 +173,57 @@ void test() {
 
 	X = new double[100 * z * pow(2, 9)];
 
-	//empirical 1-2-3 d
+	param = 0.62;
+	//empirical mix
+	for (int i = 0; i < 10; i++) {
+		args[0] = mu[i];
+		args[1] = la[i];
+		args[2] = nu[i];
+		args[3] = mu[i];
+		args[4] = la[i];
+		args[5] = nu[i];
+		for (int j = 0; j < 100 * z; j++) {
+			X[j] = get_mix_model(args, param);
+		}
+		for (int j = 0; j < 10; j++) {
+			x[j] = X[j];
+		}
+
+		min = get_min(X, 100 * z);
+		k = get_k(100 * z);
+		delta = get_delta(X, 100 * z, k);
+		counter = get_empirical_counter(X, delta, 100 * z, k, min);
+		density = get_empirical_density(counter, 100 * z, k, delta);
+
+		moments = get_empirical_moments(X, 100 * z);
+		expected_moments = get_mix_moments(args, param);
+
+		for (int q = 0; q < 10; q++) {
+			if (abs(moments[1] - expected_moments[1]) < EPS && abs(moments[3] - expected_moments[3]) < EPS && abs(get_empirical_f(x[q], density, k, delta, min) - get_mix_f(x[q], args, param) < EPS)) {
+				std::cout << ":D Test empirical 1.1." << i + 1 << "." << q + 1 << " passed" << std::endl;
+			}
+			else {
+				temp = get_mix_f(x[q], args, param);
+				std::cout << ":C Test empirical 1.1." << i + 1 << "." << q + 1 << " failed" << std::endl;
+				std::cout << "    |expected: f = " << temp << std::endl;
+				std::cout << "    |got: f = " << get_empirical_f(x[q], density, k, delta, min) << std::endl;
+				pass = false;
+			}
+		}
+		if (pass) {
+			std::cout << "------ :D Test empirical 1.1." << i + 1 << " (n = " << z * 100 << ") passed ------" << std::endl << std::endl;
+		}
+		else {
+			std::cout << "    |expected: D = " << expected_moments[1] << ", y2 = " << expected_moments[3] << std::endl;
+			std::cout << "    |got: D = " << moments[1] << ", y2 = " << moments[3] << std::endl;
+			std::cout << "------ :C Test empirical 1.1." << i + 1 << " (n = " << z * 100 << ") failed------" << std::endl << std::endl;
+			pass = true;
+		}
+		z *= 2;
+	}
+
+	//empirical default
+	z = 100;
 	for (int i = 0; i < 10; i++) {
 		for (int j = 0; j < 100 * z; j++) {
 			X[j] = get_model(mu[i], la[i], nu[i]);
@@ -193,33 +243,86 @@ void test() {
 		expected_moments = get_moments(mu[i], la[i], nu[i]);
 		for (int q = 0; q < 10; q++) {
 			if (abs(moments[1] - expected_moments[1]) < EPS && abs(moments[3] - expected_moments[3]) < EPS && abs(get_empirical_f(x[q], density, k, delta, min) - get_f(x[q], mu[i], la[i], nu[i]) < EPS)) {
-				std::cout << ":D Test empirical 2." << i + 1 << "." << q + 1 << " passed" << std::endl;
+				std::cout << ":D Test empirical 1.2." << i + 1 << "." << q + 1 << " passed" << std::endl;
 			}
 			else {
 				temp = get_f(x[q], mu[i], la[i], nu[i]);
-				std::cout << ":C Test empirical 2." << i + 1 << "." << q + 1 << " failed" << std::endl;
+				std::cout << ":C Test empirical 1.2." << i + 1 << "." << q + 1 << " failed" << std::endl;
 				std::cout << "    |expected: f = " << temp << std::endl;
 				std::cout << "    |got: f = " << get_empirical_f(x[q], density, k, delta, min) << std::endl;
 				pass = false;
 			}
 		}
 		if (pass) {
-			std::cout << "------ :D Test empirical 2." << i + 1 << " (n = " << z * 100 << ") passed ------" << std::endl << std::endl;
+			std::cout << "------ :D Test empirical 1.2." << i + 1 << " (n = " << z * 100 << ") passed ------" << std::endl << std::endl;
 		}
 		else {
 			std::cout << "    |expected: D = " << expected_moments[1] << ", y2 = " << expected_moments[3] << std::endl;
 			std::cout << "    |got: D = " << moments[1] << ", y2 = " << moments[3] << std::endl;
-			std::cout << "------ :C Test empirical 2." << i + 1 << "(n = " << z * 100 << ") failed------" << std::endl << std::endl;
+			std::cout << "------ :C Test empirical 1.2." << i + 1 << " (n = " << z * 100 << ") failed------" << std::endl << std::endl;
 			pass = true;
 		}
-
-		/*std::cout << std::endl << std::endl;
-		for (int j = 0; j < 100 * z; j++) {
-			std::cout << X[j] << std::endl;
-		}
-		std::cout << std::endl << std::endl;*/
-
 		z *= 2;
 	}
+
+	//empirical 2
+	double* Y, * empirical_moments;
+	double e_delta, e_min;
+
+	z = z / 2;
+
+	Y = new double[z];
+	
+	for (int i = 0; i < z; i++) {
+		Y[i] = get_empirical_model(get_empirical_frequency(counter, z, k), delta, k, min);
+	}
+	e_min = get_min(Y, z);
+	e_delta = get_delta(Y, z, k);
+	empirical_moments = get_empirical_moments(Y, z);
+
+	for (int q = 0; q < 10; q++) {
+		if (abs(moments[1] - empirical_moments[1]) < EPS && abs(moments[3] - empirical_moments[3]) < EPS && abs(get_empirical_f(x[q], density, k, delta, min) - get_empirical_f(x[q], get_empirical_density(counter, z, k, e_delta), k, e_delta, e_min) < EPS)) {
+			std::cout << ":D Test empirical 2.1." << q + 1 << " passed" << std::endl;
+		}
+		else {
+			temp = get_f(x[q], mu[9], la[9], nu[9]);
+			std::cout << ":C Test empirical 2.1." << q + 1 << " failed" << std::endl;
+			std::cout << "    |expected: f = " << get_empirical_f(x[q], density, k, delta, min) << std::endl;
+			std::cout << "    |got: f = " << get_empirical_f(x[q], get_empirical_density(counter, z, k, e_delta), k, e_delta, e_min) << std::endl;
+			std::cout << "    |expected: D = " << expected_moments[1] << ", y2 = " << expected_moments[3] << std::endl;
+			std::cout << "    |got: D = " << moments[1] << ", y2 = " << moments[3] << std::endl;
+			pass = false;
+		}
+	}
+	if (pass) {
+		std::cout << "------ :D Test empirical 2.1" << " (n = " << z * 100 << ") passed ------" << std::endl << std::endl;
+	}
+	else {
+		std::cout << "------ :C Test empirical 2.1" << "(n = " << z * 100 << ") failed------" << std::endl << std::endl;
+		pass = true;
+	}
+
+	for (int q = 0; q < 10; q++) {
+		if (abs(expected_moments[1] - empirical_moments[1]) < EPS && abs(expected_moments[3] - empirical_moments[3]) < EPS && abs(temp - get_empirical_f(x[q], get_empirical_density(counter, z, k, e_delta), k, e_delta, e_min) < EPS)) {
+			std::cout << ":D Test empirical 2.2." << q + 1 << " passed" << std::endl;
+		}
+		else {
+			temp = get_f(x[q], mu[9], la[9], nu[9]);
+			std::cout << ":C Test empirical 2.2." << q + 1 << " failed" << std::endl;
+			std::cout << "    |expected: f = " << temp << std::endl;
+			std::cout << "    |got: f = " << get_empirical_f(x[q], get_empirical_density(counter, z, k, e_delta), k, e_delta, e_min) << std::endl;
+			std::cout << "    |expected: D = " << expected_moments[1] << ", y2 = " << expected_moments[3] << std::endl;
+			std::cout << "    |got: D = " << empirical_moments[1] << ", y2 = " << empirical_moments[3] << std::endl;
+			pass = false;
+		}
+	}
+	if (pass) {
+		std::cout << "------ :D Test empirical 2.2" << " (n = " << z * 100 << ") passed ------" << std::endl << std::endl;
+	}
+	else {
+		std::cout << "------ :C Test empirical 2.2" << "(n = " << z * 100 << ") failed------" << std::endl << std::endl;
+		pass = true;
+	}
+
 	//________________________empirical____________________________
 }
