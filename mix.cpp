@@ -14,7 +14,7 @@ double* get_mix_moments(double* args, double mix_param) {
 	mix_moments = get_moments(args[0], args[1], args[2]);
 	moments1[0] = mix_moments[0]; moments1[1] = mix_moments[1]; moments1[2] = mix_moments[2]; moments1[3] = mix_moments[3];
 
-	mix_moments = get_moments(args[0], args[1], args[2]);
+	mix_moments = get_moments(args[3], args[4], args[5]);
 	moments2[0] = mix_moments[0]; moments2[1] = mix_moments[1]; moments2[2] = mix_moments[2]; moments2[3] = mix_moments[3];
 
 
