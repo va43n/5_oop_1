@@ -1,7 +1,7 @@
 #include "Header.h"
 
 double get_mix_f(double x, double* args, double mix_param) {
-	return (1 - mix_param) * get_f(x, args[0], args[1], args[2]) + mix_param * get_f(x, args[3], args[4], args[5]);
+	return (1. - mix_param) * get_f(x, args[0], args[1], args[2]) + mix_param * get_f(x, args[3], args[4], args[5]);
 }
 
 double* get_mix_moments(double* args, double mix_param) {
@@ -24,7 +24,7 @@ double* get_mix_moments(double* args, double mix_param) {
 
 	mix_moments[2] = 1. / pow(mix_moments[1], 3. / 2.) * ((1 - mix_param) * (pow(moments1[0] - mix_moments[0], 3) + 3 * moments1[1] * (moments1[0] - mix_moments[0]) + pow(moments1[1], 3. / 2.) * moments1[2]) + (1 - mix_param) * (pow(moments2[0] - mix_moments[0], 3) + 3 * moments2[1] * (moments2[0] - mix_moments[0]) + pow(moments2[1], 3. / 2.) * moments2[2]));
 
-	mix_moments[3] = 1. / pow(mix_moments[1], 2) * ((1 - mix_param) * (pow(moments1[0] - mix_moments[0], 4) + 6 * moments1[1] * pow(moments1[0] - mix_moments[0], 2) + 4 * (moments1[0] - mix_moments[0]) * pow(moments1[1], 3. / 2.) * moments1[2] + pow(moments1[1], 2) * moments1[3]) + mix_param * (pow(moments2[0] - mix_moments[0], 4) + 6 * moments2[1] * pow(moments2[0] - mix_moments[0], 2) + 4 * (moments2[0] - mix_moments[0]) * pow(moments2[1], 3. / 2.) * moments2[2] + pow(moments2[1], 2) * moments2[3]));
+	mix_moments[3] = 1. / pow(mix_moments[1], 2) * ((1 - mix_param) * (pow(moments1[0] - mix_moments[0], 4) + 6 * moments1[1] * pow(moments1[0] - mix_moments[0], 2) + 4 * (moments1[0] - mix_moments[0]) * pow(moments1[1], 3. / 2.) * moments1[2] + pow(moments1[1], 2) * moments1[3]) + mix_param * (pow(moments2[0] - mix_moments[0], 4) + 6 * moments2[1] * pow(moments2[0] - mix_moments[0], 2) + 4 * (moments2[0] - mix_moments[0]) * pow(moments2[1], 3. / 2.) * moments2[2] + pow(moments2[1], 2) * moments2[3])) - 3;
 
 	return mix_moments;
 }

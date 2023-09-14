@@ -5,14 +5,10 @@
 // D=1/(2nu+3), y2=-6/(2nu+5)
 
 
-//#define __STDCPP_MATH_SPEC_FUNCS__ 201003L
-//#define __STDCPP_WANT_MATH_SPEC_FUNCS__ 1
-
-
 #include <fstream>
 #include <cmath>
-#include <iomanip>
 #include <iostream>
+#include <fstream>
 #include <string>
 #include <time.h>
 
@@ -23,10 +19,12 @@ const double EPS = pow(10, -2);
 
 double check_variables(int mode);
 void enter(double* args, int size);
+std::string write_in_file(double num);
 
 double get_f(double x, double mu, double la, double nu);
 double* get_moments(double mu, double la, double nu);
 double get_model(double mu, double la, double nu);
+double check_x(double mu, double la);
 
 double get_mix_f(double x, double* args, double mix_param);
 double* get_mix_moments(double* args, double mix_param);

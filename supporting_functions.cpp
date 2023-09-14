@@ -31,12 +31,6 @@ double check_variables(int mode) {
 				continue;
 			}
 		}
-		else if (mode == 3) {
-			if (result < -1 || result > 1) {
-				std::cout << "X should be more or equal to " << -1 << " and less or equal to " << 1 << ". Try again: ";
-				continue;
-			}
-		}
 		else if (mode == 4) {
 			if (result <= 0 || result >= 1) {
 				std::cout << "p should be more then " << 0 << " and less then " << 1 << ". Try again: ";
@@ -60,4 +54,19 @@ void enter(double* args, int size) {
 		std::cout << "Enter " << i + 1 << " argument: ";
 		args[i] = check_variables(i % 3);
 	}
+}
+
+std::string write_in_file(double num) {
+	std::string s;
+
+	s = std::to_string(num);
+
+	for (int i = 0; i < s.size(); i++) {
+		if (s[i] == '.') {
+			s[i] = ',';
+			break;
+		}
+	}
+
+	return s;
 }

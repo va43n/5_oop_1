@@ -166,6 +166,9 @@ void test() {
 	double
 		mu[10]{ 0., 5., -3., 9., 3.1, -9.4, 0.5, -0.23, 12.5, -10. },
 		la[10]{ 1., 2., 8., 1.7, 1.3, 5.1, 10.3, 5.9, 0.1, 9.9 },
+		mu2[10]{ 6., -2.1, 3.7, 2.9, -1.6, 8.1, -2.9, -5.9, 0.5, -0.4 },
+		la2[10]{ 5., 9., 3.8, 5.2, 6.3, 0.5, 2.5, 2.1, 0.7, 8.2 },
+		nu2[10]{ 8., 2.6, 1.1, 5., 1.2, 9.1, 2.9, 2.1, 8.1, 3. },
 		x[10];
 	double* X, * expected_moments = new double[4];
 	double min, delta, * density;
@@ -179,9 +182,9 @@ void test() {
 		args[0] = mu[i];
 		args[1] = la[i];
 		args[2] = nu[i];
-		args[3] = mu[i];
-		args[4] = la[i];
-		args[5] = nu[i];
+		args[3] = mu2[i];
+		args[4] = la2[i];
+		args[5] = nu2[i];
 		for (int j = 0; j < 100 * z; j++) {
 			X[j] = get_mix_model(args, param);
 		}
@@ -221,6 +224,21 @@ void test() {
 		}
 		z *= 2;
 	}
+
+	std::ofstream dm_data, e_data, x_data;
+	dm_data.open("m_data.txt");
+	e_data.open("e_m_data.txt");
+	x_data.open("x_m_data.txt");
+
+	for (int i = 0; i < z / 2; i++) {
+		x_data << write_in_file(X[i]) << std::endl;
+		dm_data << write_in_file(get_mix_f(X[i], args, param)) << std::endl;
+		e_data << write_in_file(get_empirical_f(X[i], density, k, delta, min)) << std::endl;
+	}
+
+	x_data.close();
+	e_data.close();
+	dm_data.close();
 
 	//empirical default
 	z = 100;
@@ -264,6 +282,20 @@ void test() {
 		}
 		z *= 2;
 	}
+
+	dm_data.open("d_data.txt");
+	e_data.open("e_d_data.txt");
+	x_data.open("x_d_data.txt");
+
+	for (int i = 0; i < z / 2; i++) {
+		x_data << write_in_file(X[i]) << std::endl;
+		dm_data << write_in_file(get_f(X[i], mu[9], la[9], nu[9])) << std::endl;
+		e_data << write_in_file(get_empirical_f(X[i], density, k, delta, min)) << std::endl;
+	}
+
+	x_data.close();
+	e_data.close();
+	dm_data.close();
 
 	//empirical 2
 	double* Y, * empirical_moments;

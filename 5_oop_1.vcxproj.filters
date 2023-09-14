@@ -40,7 +40,22 @@
     </ClInclude>
   </ItemGroup>
   <ItemGroup>
-    <Text Include="data.txt">
+    <Text Include="d_data.txt">
+      <Filter>Файлы ресурсов</Filter>
+    </Text>
+    <Text Include="e_d_data.txt">
+      <Filter>Файлы ресурсов</Filter>
+    </Text>
+    <Text Include="x_d_data.txt">
+      <Filter>Файлы ресурсов</Filter>
+    </Text>
+    <Text Include="m_data.txt">
+      <Filter>Файлы ресурсов</Filter>
+    </Text>
+    <Text Include="e_m_data.txt">
+      <Filter>Файлы ресурсов</Filter>
+    </Text>
+    <Text Include="x_m_data.txt">
       <Filter>Файлы ресурсов</Filter>
     </Text>
   </ItemGroup>

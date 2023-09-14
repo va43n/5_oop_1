@@ -1,15 +1,10 @@
 #include "Header.h"
 
 double get_f(double x, double mu, double la, double nu) {
-	double a, b1, b21, b22, c;
-	a = 2 * std::tgamma(nu + 1) * std::tgamma(nu + 1) / std::tgamma(2 * nu + 2);
-	b1 = 1 - pow((x - mu) / la, 2);
-	b21 = b1 / 4.;
-	b22 = pow(b21, nu);
-	//b = pow((1 - pow((x - mu) / la, 2)) / 4., nu);
-	c = b22 / a / la;
-	//return  1. / la * 1. / (2 * std::tgamma(nu + 1) * std::tgamma(nu + 1) / std::tgamma(2 * nu + 2)) * pow((1 - pow((x - mu) / la, 2)) / 4., nu);
-	return c;
+	if (x > -1. * la + mu && x < 1. * la + mu) {
+		return pow((1 - pow((x - mu) / la, 2)) / 4., nu) / (2 * std::tgamma(nu + 1) * std::tgamma(nu + 1) / std::tgamma(2 * nu + 2)) / la;
+	}
+	return 0;
 }
 
 double* get_moments(double mu, double la, double nu) {
@@ -32,4 +27,26 @@ double get_model(double mu, double la, double nu) {
 	do r2 = (double)rand() / RAND_MAX; while (r2 == 0. || r2 == 1.);
 
 	return sqrt(1 - pow(r1, 1 / (nu + 1. / 2.))) * cos(2 * PI * r2) * la + mu;
+}
+
+double check_x(double mu, double la) {
+	std::string temp;
+	double result;
+
+	while (true) {
+		std::cin >> temp;
+		try {
+			result = stod(temp);
+		}
+		catch (std::invalid_argument) {
+			std::cout << "You should enter only number and \'.\' for real numbers ";
+			continue;
+		}
+		if (!(result >= -1. * la + mu && result <= 1. * la + mu)) {
+			std::cout << "x should be more or equal to " << -1. * la + mu << " and less or equal to " << 1. * la + mu << ". Try again: ";
+			continue;
+		}
+		break;
+	}
+	return result;
 }

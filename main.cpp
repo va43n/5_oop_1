@@ -5,7 +5,7 @@ int main() {
 	//args: 0 - mu1, 1 - la1, 2 - nu1;
 	//args: 3 - mu2, 4 - la2, 5 - nu2;
 	double* args, *moments;
-	double x;
+	double x, *X;
 
 	int n;
 
@@ -21,7 +21,7 @@ int main() {
 		enter(args, 3);
 
 		std::cout << "Enter x: ";
-		x = check_variables(3);
+		x = check_x(args[0], args[1]);
 
 		//__________________________f(x)_______________________________
 		std::cout << "f(" << x << ") = " << get_f(x, args[0], args[1], args[2]) << std::endl;
@@ -38,6 +38,21 @@ int main() {
 		//___________________________model_____________________________
 		std::cout << "x(" << args[0] << ", " << args[1] << ", " << args[2] << ") = " << get_model(args[0], args[1], args[2]) << std::endl;
 		//___________________________model_____________________________
+
+		std::cout << "Enter n: ";
+		std::cin >> n;
+
+		//X = new double[n];
+		std::ofstream x_d_data, d_data;
+		x_d_data.open("x_d_data.txt");
+		d_data.open("d_data.txt");
+		for (int i = 0; i < n; i++) {
+			x = get_model(args[0], args[1], args[2]);
+			x_d_data << write_in_file(x) << std::endl;
+			d_data << write_in_file(get_f(x, args[0], args[1], args[2])) << std::endl;
+		}
+		x_d_data.close();
+		d_data.close();
 	}
 	else if (mode == 'm') {
 		double param;
